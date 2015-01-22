@@ -4,5 +4,46 @@
     <string name="app_name">FriendConnect</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="loading">Wird geladen</string>
+    
+     <string name="error_internetcon">"Bitte überprüfe die Internetverbindung"</string>
+    <string name="error_cardnumber">"Fehler - Kartennummer konnte nicht gefunden werden"</string>
+    <string name="error_impress">"Fehler - Impressum konnte nicht geladen werden"</string>
+    <string name="error_shopinfo">"Fehler - Shopinfo konnte nicht geladen werden"</string>
+    <string name="error_loading_element">"Element konnte nicht geladen werden"</string>
+    <string name="error_dialog_title">Problems on loading</string>
+    <string name="error_dialog_nomember_message">"Please check your input"</string>
+    <string name="error_agree_title">Acceptance field is missing</string>
+    
+      <!-- registration screen -->
+    <string name="newsletter_activity_cardnumberhint">Add the last digits of your member number</string>
+    <string name="newsletter_activity_cardnumberedittexthint">Member number</string>
+    <string name="newsletter_activity_zustimmung">I accept that my data is used for FriendConnect..</string>
+    <string name="newsletter_activity_orderbutton">Register</string>
+    <string name="newsletter_activity_success_title">Registratino successful</string>
+    <string name="becomemember_activity_gender_male">Mr</string>
+    <string name="becomemember_activity_gender_female">Ms</string>
+    <string name="becomemember_activity_gender">Gender</string>
+    <string name="becomemember_activity_child_male">male</string>
+    <string name="becomemember_activity_child_female">female</string>
+    <string name="becomemember_activity_child_gender">Gender</string>
+    <string name="becomemember_activity_firstname">name</string>
+    <string name="becomemember_activity_lastname">surname</string>
+    <string name="becomemember_activity_title">title</string>
+    <string name="becomemember_activity_street">street</string>
+    <string name="becomemember_activity_housenumber">number</string>
+    <string name="becomemember_activity_zip">postcode</string>
+    <string name="becomemember_activity_city">city</string>
+    <string name="becomemember_activity_country">country</string>
+    <string name="becomemember_activity_email">e-Mail-Adresse</string>
+    <string name="becomemember_activity_birthdate">date of birth</string>
+    <string name="becomemember_activity_landlinephone">Festnetztelefon</string>
+    <string name="becomemember_activity_mobilephone">Mobiltelefon</string>
+    
+     <!-- Dialog Strings -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_yes">Ja, bitte</string>
+    <string name="dialog_no">Nein, danke</string>
+       <string name="error_agree_message_registration">I agree with the regisration</string>
 
 </resources>
