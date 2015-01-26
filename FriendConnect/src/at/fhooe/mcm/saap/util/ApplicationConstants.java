@@ -7,6 +7,16 @@ public class ApplicationConstants {
 
     public final static int XYZ = 1;
     public static final String BACKEND_URL = "www.beispiel.at";
+    
+    public enum Gender {
+    	   MALE,
+    	   FEMALE
+    	}
+    public static final String WEATHER_WORST = "WEATHER_WORST";
+    public static final String WEATHER_BAD = "WEATHER_BAD";
+    public static final String WEATHER_OK = "WEATHER_OK";
+    public static final String WEATHER_GOOD = "WEATHER_GOOD";
+    public static final String WEATHER_EXCELLENT = "WEATHER_EXCELLENT";
 
     //Preferences
     public static final String PREFERENCE_USERDATA_GENDER = "PREFERENCE_USERDATA_GENDER";

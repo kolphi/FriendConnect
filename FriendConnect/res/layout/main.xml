@@ -60,13 +60,13 @@
                     android:id="@+id/postStatusUpdateButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Post Status Update"
+                    android:text="Query my interests"
                     />
             <Button
                     android:id="@+id/postPhotoButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Post Photo"
+                    android:text="Show me activities"
                     />
             <Button
                     android:id="@+id/pickFriendsButton"
@@ -80,6 +80,15 @@
                     android:layout_height="wrap_content"
                     android:text="Pick Place"
                     />
+            
+            <TextView
+                    android:id="@+id/userTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:textColor="#333"
+                    android:textSize="18sp"/>
         </LinearLayout>
     </LinearLayout>
     <FrameLayout
