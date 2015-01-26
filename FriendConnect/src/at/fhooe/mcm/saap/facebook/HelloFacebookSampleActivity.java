@@ -16,16 +16,26 @@
 
 package at.fhooe.mcm.saap.facebook;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -44,6 +54,7 @@ import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -58,21 +69,24 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.PickerFragment;
 import com.facebook.widget.PlacePickerFragment;
 import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
 
 /**
  * 
  * @author Philipp
  * 
  */
-public class HelloFacebookSampleActivity extends FragmentActivity {
+public class HelloFacebookSampleActivity extends FragmentActivity implements
+		LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener {
+
+	private Location currentLocation;
+	private LocationClient locationClient;
 
 	private static final String PERMISSION = "publish_actions";
-	private static final Location SEATTLE_LOCATION = new Location("") {
-		{
-			setLatitude(47.6097);
-			setLongitude(-122.3331);
-		}
-	};
 
 	private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
 
@@ -81,6 +95,9 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 	private Button pickFriendsButton;
 	private Button pickPlaceButton;
 	private LoginButton loginButton;
+
+	private TextView userTextView;
+
 	private ProfilePictureView profilePictureView;
 	private TextView greeting;
 	private PendingAction pendingAction = PendingAction.NONE;
@@ -125,6 +142,8 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
 
+		locationClient = new LocationClient(this, this, this);
+
 		if (savedInstanceState != null) {
 			String name = savedInstanceState
 					.getString(PENDING_ACTION_BUNDLE_KEY);
@@ -134,6 +153,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 		setContentView(R.layout.main);
 
 		loginButton = (LoginButton) findViewById(R.id.login_button);
+		// loginButton.setFragment(this);
+		loginButton.setReadPermissions(Arrays.asList("user_location",
+				"user_birthday", "user_likes,", "user_interests",
+				"user_activities", "user_friends", "user_actions.books"));
 		loginButton
 				.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
 					@Override
@@ -149,6 +172,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 
 		profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
 		greeting = (TextView) findViewById(R.id.greeting);
+		userTextView = (TextView) findViewById(R.id.userTextView);
 
 		postStatusUpdateButton = (Button) findViewById(R.id.postStatusUpdateButton);
 		postStatusUpdateButton.setOnClickListener(new View.OnClickListener() {
@@ -337,7 +361,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 	}
 
 	private void onClickPostStatusUpdate() {
-		performPublish(PendingAction.POST_STATUS_UPDATE, canPresentShareDialog);
+		querySportInterests();
+		// queryUserData();
+		// performPublish(PendingAction.POST_STATUS_UPDATE,
+		// canPresentShareDialog);
 	}
 
 	private FacebookDialog.ShareDialogBuilder createShareDialogBuilderForLink() {
@@ -346,6 +373,97 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 				.setDescription(
 						"The 'Hello Facebook' sample application showcases simple Facebook integration")
 				.setLink("http://developers.facebook.com/android");
+	}
+
+	private String buildUserInfoDisplay(GraphUser user) {
+		StringBuilder userInfo = new StringBuilder("");
+
+		// Example: typed access (name)
+		// - no special permissions required
+		userInfo.append(String.format("Name: %s\n\n", user.getName()));
+
+		// Example: typed access (birthday)
+		// - requires user_birthday permission
+		userInfo.append(String.format("Birthday: %s\n\n", user.getBirthday()));
+
+		// Example: partially typed access, to location field,
+		// name key (location)
+		// - requires user_location permission
+		userInfo.append(String.format("Location: %s\n\n", user.getLocation()
+				.getProperty("name")));
+
+		// Example: access via property name (locale)
+		// - no special permissions required
+		userInfo.append(String.format("Locale: %s\n\n",
+				user.getProperty("locale")));
+
+		// Example: access via property name (locale)
+		// - no special permissions required
+		if (user.getProperty("sports") != null) {
+			userInfo.append(String.format("favorite_teams: %s\n\n",
+					user.getProperty("sports")));
+		}
+		// Example: access via property name (locale)
+		// - no special permissions required
+		if (user.getProperty("favorite_teams") != null) {
+			userInfo.append(String.format("favorite_teams: %s\n\n",
+					user.getProperty("favorite_teams")));
+		}
+		if (user.getProperty("favorite_athletes") != null) {
+			userInfo.append(String.format("favorite_athletes: %s\n\n",
+					user.getProperty("favorite_athletes")));
+		}
+
+		// Example: access via key for array (languages)
+		// - requires user_likes permission
+		JSONArray languages = (JSONArray) user.getProperty("languages");
+		if (languages != null) {
+			if (languages.length() > 0) {
+				ArrayList<String> languageNames = new ArrayList<String>();
+				for (int i = 0; i < languages.length(); i++) {
+					JSONObject language = languages.optJSONObject(i);
+					// Add the language name to a list. Use JSON
+					// methods to get access to the name field.
+					languageNames.add(language.optString("name"));
+				}
+				userInfo.append(String.format("Languages: %s\n\n",
+						languageNames.toString()));
+			}
+		}
+
+		return userInfo.toString();
+	}
+
+	private void querySportInterests() {
+		/* make the API call */
+
+		new Request(Session.getActiveSession(), "/me/activities", null,
+				HttpMethod.GET, new Request.Callback() {
+					public void onCompleted(Response response) {
+						/* handle the result */
+						response.toString();
+						GraphObject g = response.getGraphObject();
+						Log.i("INFO", g.toString());
+						JSONObject json = g.getInnerJSONObject();
+						JSONArray dataArray = null;
+						StringBuffer sb = new StringBuffer();
+						
+						try {
+							dataArray = json.getJSONArray("data");
+						
+						
+						for(int i = 0; i< dataArray.length(); i++){
+							sb.append(dataArray.getJSONObject(i).getString("name"));
+						}
+						
+						} catch (JSONException e) {
+							Log.e("EXC", "JSON-Exception on parsing");
+							e.printStackTrace();
+						}
+
+						userTextView.setText(sb.toString());
+					}
+				}).executeAsync();
 	}
 
 	private void postStatusUpdate() {
@@ -427,7 +545,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 		// We want the fragment fully created so we can use it immediately.
 		fm.executePendingTransactions();
 
-		fragment.loadData(false);
+		fragment.loadData(true);
 	}
 
 	private void onClickPickFriends() {
@@ -488,7 +606,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 
 	private void onClickPickPlace() {
 		final PlacePickerFragment fragment = new PlacePickerFragment();
-		fragment.setLocation(SEATTLE_LOCATION);
+		fragment.setLocation(currentLocation);
 		fragment.setTitleText(getString(R.string.pick_seattle_place));
 
 		setPlacePickerListeners(fragment);
@@ -546,4 +664,96 @@ public class HelloFacebookSampleActivity extends FragmentActivity {
 			handlePendingAction();
 		}
 	}
+
+	// ////////
+	// LocationStuff
+	// ///////
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// Connect the client.
+		locationClient.connect();
+
+	}
+
+	@Override
+	protected void onStop() {
+		// Disconnecting the client invalidates it.
+		locationClient.disconnect();
+		super.onStop();
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		currentLocation = locationClient.getLastLocation();
+		if (currentLocation != null) {
+			new GetAddressTask(getApplicationContext())
+					.execute(currentLocation);
+		}
+
+	}
+
+	@Override
+	public void onDisconnected() {
+		//
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		//
+
+	}
+
+	private class GetAddressTask extends AsyncTask<Location, Void, String> {
+		Context context;
+
+		public GetAddressTask(Context context) {
+			super();
+			this.context = context;
+		}
+
+		@Override
+		protected String doInBackground(Location... params) {
+			Location location = params[0];
+			List<Address> addresses = null;
+			Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+			/*
+			 * Return 1 address.
+			 */
+			try {
+				addresses = geocoder.getFromLocation(location.getLatitude(),
+						location.getLongitude(), 1);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if (addresses != null && addresses.size() > 0) {
+				Address address = addresses.get(0);
+
+				StringBuffer addressText = new StringBuffer();
+				addressText.append(address.getAddressLine(0));
+				addressText.append(", " + address.getAddressLine(1));
+
+				return new String(addressText);
+			} else {
+				return "";
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String addressText) {
+			// update the address to last transaction in the database
+			// db.updateTransactionLocation(transactionID, addressText);
+		}
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		currentLocation = location;
+		if (currentLocation != null) {
+			new GetAddressTask(getApplicationContext())
+					.execute(currentLocation);
+		}
+	}
+
 }
