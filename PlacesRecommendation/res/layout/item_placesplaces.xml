@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogTableLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+
+    <TableRow 
+	    android:id="@+id/tableRowHeader"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+	 	
+	>
+	   
+	 	<TextView
+            android:id="@+id/CellNameValue"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/darkGreen"
+    	/>    
+	    
+	</TableRow>
+	
+    
+    <TableRow 
+	    android:id="@+id/tableRowImage"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+	 	
+	>
+	   
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="fsdfdsfsd"
+        android:src="@drawable/newlyresurfacedtenniscourt" />  
+	    
+	</TableRow>
+    
+	<TableRow 
+	    android:id="@+id/tableRow1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	   	android:layout_marginLeft="5dp"
+	>
+	   
+	 <TextView
+            android:id="@+id/CellAddress"
+            android:text="@string/addresse"
+            android:layout_width="0dp"
+            android:layout_weight="0.33"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	 <TextView
+            android:id="@+id/CellAdresseValue"
+            android:layout_width="0dp"
+            android:layout_weight="0.66"
+             android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>    
+	
+	<TableRow 
+	    android:id="@+id/CellDefinitionRow"
+	    android:layout_marginLeft="5dp"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellZeiten"
+            android:text="@string/offnungzeiten"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	   <TextView
+            android:id="@+id/CellZeitenValue"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.66"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>
+	
+	
+	<TableRow 
+	    android:id="@+id/CelltelefonRow"
+	    android:layout_marginLeft="5dp"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellTelefon"
+            android:text="@string/telefon"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	   <TextView
+            android:id="@+id/CellTelefonValue"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.66"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>
+	
+</TableLayout>
