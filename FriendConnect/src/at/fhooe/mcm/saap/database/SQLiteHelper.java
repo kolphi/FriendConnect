@@ -193,11 +193,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		if (c.moveToFirst()) {
 			do {
 				ActivityModel td = new ActivityModel(
-						c.getString(c.getColumnIndex(INTERESTS_KEY_NAME)),
-						c.getString(c.getColumnIndex(INTERESTS_KEY_TYPE)),
+						c.getString(c.getColumnIndex(ACTIVITIES_KEY_ID)),
+						c.getString(c.getColumnIndex(ACTIVITIES_KEY_TYPE)),
 						c.getString(c.getColumnIndex(ACTIVITIES_KEY_WEATHER)),
 						c.getString(c.getColumnIndex(ACTIVITIES_KEY_LOCATION)));
-				// adding to transactions list
+				// adding to activity list
 
 				actItems.add(td);
 			} while (c.moveToNext());

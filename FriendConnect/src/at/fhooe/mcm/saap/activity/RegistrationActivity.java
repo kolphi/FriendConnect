@@ -54,7 +54,25 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 
 		// ActionBar actionBar = getActionBar();
 		// actionBar.setDisplayHomeAsUpEnabled(true);
-		//
+		
+		// shared prefs editor
+		mPrefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		mPrefEditor = mPrefs.edit();
+		String userIsRegistered = (mPrefs.getString(
+				ApplicationConstants.PREFERENCE_USERDATA_FIRSTNAME, ""));
+		
+		if(userIsRegistered.equals("")){
+			//continue
+		}else{
+			Intent intent = new Intent(this, HelloFacebookSampleActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			startActivity(intent);
+			finish();
+		}
+		
 		mClubnumber = new EditText(this);
 		mFirstName = new EditText(this);
 		mLastName = new EditText(this);
@@ -69,18 +87,6 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 		mAboButton = (Button) findViewById(R.id.activity_newsletter_button);
 
 		mAboButton.setOnClickListener(this);
-
-		// shared prefs editor
-		mPrefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		mPrefEditor = mPrefs.edit();
-		mFirstName.setText(mPrefs.getString(
-				ApplicationConstants.PREFERENCE_USERDATA_FIRSTNAME, ""));
-		mLastName.setText(mPrefs.getString(
-				ApplicationConstants.PREFERENCE_USERDATA_LASTNAME, ""));
-		mEmail.setText(mPrefs.getString(
-				ApplicationConstants.PREFERENCE_USERDATA_EMAIL, ""));
-		
 
 		// init database if not initialized
 		if (db == null) {
@@ -149,7 +155,7 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 								| Intent.FLAG_ACTIVITY_NEW_TASK);
 
 						startActivity(intent);
-						//finish();
+						finish();
 
 					} else {
 						new AlertDialog.Builder(this)

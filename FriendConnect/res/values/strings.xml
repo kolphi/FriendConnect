@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">FriendConnect</string>
+    <string name="act_registration_name">Registration</string>
+    <string name="act_facebook_name">Facebook Login</string>
+    <string name="act_activitylist_name">Activity List</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="loading">Wird geladen</string>

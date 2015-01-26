@@ -48,6 +48,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.fhooe.mcm.saap.R;
+import at.fhooe.mcm.saap.activity.ExecutionListActivity;
 import at.fhooe.mcm.saap.database.SQLiteHelper;
 import at.fhooe.mcm.saap.model.ActivityModel;
 import at.fhooe.mcm.saap.model.InterestModel;
@@ -95,8 +96,8 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 
 	private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
 
-	private Button postStatusUpdateButton;
-	private Button postPhotoButton;
+	private Button queryInterestsButton;
+	private Button showActivitiesButton;
 	private Button pickFriendsButton;
 	private Button pickPlaceButton;
 	private LoginButton loginButton;
@@ -180,17 +181,17 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 		greeting = (TextView) findViewById(R.id.greeting);
 		userTextView = (TextView) findViewById(R.id.userTextView);
 
-		postStatusUpdateButton = (Button) findViewById(R.id.postStatusUpdateButton);
-		postStatusUpdateButton.setOnClickListener(new View.OnClickListener() {
+		queryInterestsButton = (Button) findViewById(R.id.queryInterests);
+		queryInterestsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				onClickPostStatusUpdate();
+				onClickQueryActivities();
 			}
 		});
 
-		postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
-		postPhotoButton.setOnClickListener(new View.OnClickListener() {
+		showActivitiesButton = (Button) findViewById(R.id.showActivities);
+		showActivitiesButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				onClickPostPhoto();
+				onClickShowActivities();
 			}
 		});
 
@@ -316,9 +317,9 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 		Session session = Session.getActiveSession();
 		boolean enableButtons = (session != null && session.isOpened());
 
-		postStatusUpdateButton.setEnabled(enableButtons
+		queryInterestsButton.setEnabled(enableButtons
 				|| canPresentShareDialog);
-		postPhotoButton.setEnabled(enableButtons
+		showActivitiesButton.setEnabled(enableButtons
 				|| canPresentShareDialogWithPhotos);
 		pickFriendsButton.setEnabled(enableButtons);
 		pickPlaceButton.setEnabled(enableButtons);
@@ -372,7 +373,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 				.setPositiveButton(R.string.ok, null).show();
 	}
 
-	private void onClickPostStatusUpdate() {
+	private void onClickQueryActivities() {
 		querySportInterests();
 		// queryUserData();
 		// performPublish(PendingAction.POST_STATUS_UPDATE,
@@ -449,6 +450,8 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 	private void querySportInterests() {
 		/* make the API call */
 
+		if(db.getAllInterests().isEmpty()){
+		
 		new Request(Session.getActiveSession(), "/me/activities", null,
 				HttpMethod.GET, new Request.Callback() {
 					public void onCompleted(Response response) {
@@ -477,6 +480,10 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 						//userTextView.setText(sb.toString());
 					}
 				}).executeAsync();
+		
+		}else{
+			//interests have already been retrieved
+		}
 	}
 
 	private void postStatusUpdate() {
@@ -503,9 +510,14 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 		}
 	}
 
-	private void onClickPostPhoto() {
-		performPublish(PendingAction.POST_PHOTO,
-				canPresentShareDialogWithPhotos);
+	private void onClickShowActivities() {
+		Intent intent = new Intent(this, ExecutionListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		startActivity(intent);
+//		performPublish(PendingAction.POST_PHOTO,
+//				canPresentShareDialogWithPhotos);
 	}
 
 	private FacebookDialog.PhotoShareDialogBuilder createShareDialogBuilderForPhoto(

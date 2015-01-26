@@ -18,6 +18,7 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="color_text">#FF191919</color>
+     <color name="color_additional_2">#FFCCCCCC</color>
     <color name="color_additional_4">#FF7F7F7F</color>
      <color name="color_background">#FFF2F2F2</color>
          <color name="ikea_family_orange">#FF6600</color>

@@ -23,7 +23,7 @@
 
         <activity
             android:name="at.fhooe.mcm.saap.activity.RegistrationActivity"
-            android:label="@string/app_name" >
+            android:label="@string/act_registration_name" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,8 +36,12 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="at.fhooe.mcm.saap.activity.ExecutionListActivity"
+            android:label="@string/act_activitylist_name" >
+        </activity>
+        <activity
             android:name=".facebook.HelloFacebookSampleActivity"
-            android:label="@string/app_name"
+            android:label="@string/act_facebook_name"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                <!--  <action android:name="android.intent.action.MAIN" />
