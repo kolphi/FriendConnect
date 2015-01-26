@@ -17,7 +17,10 @@
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
-    <color name="ikea_family_orange">#FF6600</color>
+    <color name="color_text">#FF191919</color>
+    <color name="color_additional_4">#FF7F7F7F</color>
+     <color name="color_background">#FFF2F2F2</color>
+         <color name="ikea_family_orange">#FF6600</color>
     <color name="ikea_family_orange_dark">#EF6328</color>
     <color name="ikea_family_divider_color">#b5b5b5</color>
     <color name="ikea_family_ligth_grey">#F0F0F0</color>

@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +21,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import at.fhooe.mcm.saap.database.SQLiteHelper;
+import at.fhooe.mcm.saap.facebook.HelloFacebookSampleActivity;
+import at.fhooe.mcm.saap.model.ActivityModel;
 import at.fhooe.mcm.saap.util.ApplicationConstants;
 
 /**
@@ -33,7 +37,9 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 	private EditText mClubnumber, mFirstName, mLastName, mEmail;
 	private CheckBox mCheckbox;
 	private Button mAboButton;
+	private SQLiteHelper db;
 	private ProgressDialog mProgressDialog;
+	
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefEditor;
 	public final static Pattern EMAIL_ADDRESS_PATTERN = Pattern
@@ -56,7 +62,6 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 		mCheckbox = new CheckBox(this);
 		mAboButton = new Button(this);
 
-		mClubnumber = (EditText) findViewById(R.id.activity_newsletter_accountnumber);
 		mFirstName = (EditText) findViewById(R.id.activity_newsletter_firstname);
 		mLastName = (EditText) findViewById(R.id.activity_newsletter_lastname);
 		mEmail = (EditText) findViewById(R.id.activity_newsletter_email);
@@ -75,19 +80,20 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 				ApplicationConstants.PREFERENCE_USERDATA_LASTNAME, ""));
 		mEmail.setText(mPrefs.getString(
 				ApplicationConstants.PREFERENCE_USERDATA_EMAIL, ""));
+		
 
-		// this is a demo for pushing shared prefs
-		// --------
-		mPrefEditor.putString(
-				ApplicationConstants.PREFERENCE_USERDATA_FIRSTNAME, mFirstName
-						.getText().toString());
-		mPrefEditor.putString(
-				ApplicationConstants.PREFERENCE_USERDATA_LASTNAME, mLastName
-						.getText().toString());
-		mPrefEditor.putString(ApplicationConstants.PREFERENCE_USERDATA_EMAIL,
-				mEmail.getText().toString());
-		mPrefEditor.commit();
-		// --------
+		// init database if not initialized
+		if (db == null) {
+			//add activities
+			db = new SQLiteHelper(getApplicationContext());
+			if(db.getAllActivities().isEmpty()){
+				db.addNewActivity(new ActivityModel("Soccerfive Indoor", "Soccer", ApplicationConstants.WEATHER_EXCELLENT,"Linz"));
+				db.addNewActivity(new ActivityModel("Hagenberg ", "Soccer", ApplicationConstants.WEATHER_OK,"Hagenberg"));
+				db.addNewActivity(new ActivityModel("Pregarten Soccer Court", "Soccer", ApplicationConstants.WEATHER_BAD,"Pregarten"));
+				db.addNewActivity(new ActivityModel("Badminton Center Linz", "Badminton", ApplicationConstants.WEATHER_EXCELLENT,"Linz"));
+				db.addNewActivity(new ActivityModel("Soccerfive", "Soccer", ApplicationConstants.WEATHER_OK,"Linz"));
+			}
+		}
 	}
 
 	/**
@@ -100,17 +106,17 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 		return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		// Respond to the action bar's Up/Home button
-		case android.R.id.home:
-
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		// Respond to the action bar's Up/Home button
+//		case android.R.id.home:
+//
+//			NavUtils.navigateUpFromSameTask(this);
+//			return true;
+//		}
+//		return super.onOptionsItemSelected(item);
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -118,7 +124,7 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 		case R.id.activity_newsletter_button:
 			// do webservice request
 
-			String clubnumber = mClubnumber.getText().toString();
+		//	String clubnumber = mClubnumber.getText().toString();
 			String firstname = mFirstName.getText().toString();
 			String lastname = mLastName.getText().toString();
 			String email = mEmail.getText().toString();
@@ -128,10 +134,22 @@ public class RegistrationActivity extends Activity implements OnClickListener {
 						&& email.length() > 0) {
 					if (mCheckbox.isChecked()) {
 
-						// show progress dialog
-//						mProgressDialog = ProgressDialog.show(
-//								RegistrationActivity.this, "",
-//								this.getString(R.string.loading), true, true);
+						mPrefEditor.putString(
+								ApplicationConstants.PREFERENCE_USERDATA_FIRSTNAME, mFirstName
+										.getText().toString());
+						mPrefEditor.putString(
+								ApplicationConstants.PREFERENCE_USERDATA_LASTNAME, mLastName
+										.getText().toString());
+						mPrefEditor.putString(ApplicationConstants.PREFERENCE_USERDATA_EMAIL,
+								mEmail.getText().toString());
+						mPrefEditor.commit();
+						
+						Intent intent = new Intent(this, HelloFacebookSampleActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_NEW_TASK);
+
+						startActivity(intent);
+						//finish();
 
 					} else {
 						new AlertDialog.Builder(this)

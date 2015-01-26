@@ -48,6 +48,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.fhooe.mcm.saap.R;
+import at.fhooe.mcm.saap.database.SQLiteHelper;
+import at.fhooe.mcm.saap.model.ActivityModel;
+import at.fhooe.mcm.saap.model.InterestModel;
+import at.fhooe.mcm.saap.util.ApplicationConstants;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.FacebookAuthorizationException;
@@ -69,6 +73,7 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.PickerFragment;
 import com.facebook.widget.PlacePickerFragment;
 import com.facebook.widget.ProfilePictureView;
+import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -95,6 +100,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 	private Button pickFriendsButton;
 	private Button pickPlaceButton;
 	private LoginButton loginButton;
+	private SQLiteHelper db;
 
 	private TextView userTextView;
 
@@ -237,6 +243,12 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 		// Can we present the share dialog for photos?
 		canPresentShareDialogWithPhotos = FacebookDialog.canPresentShareDialog(
 				this, FacebookDialog.ShareDialogFeature.PHOTOS);
+		
+		// init database if not initialized
+		if (db == null) {
+			//add activities
+			db = new SQLiteHelper(getApplicationContext());
+		}
 	}
 
 	@Override
@@ -453,6 +465,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 						
 						
 						for(int i = 0; i< dataArray.length(); i++){
+							db.addNewInterest(new InterestModel(String.valueOf(i), dataArray.getJSONObject(i).getString("name"), "Sport"));
 							sb.append(dataArray.getJSONObject(i).getString("name"));
 						}
 						
@@ -461,7 +474,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 							e.printStackTrace();
 						}
 
-						userTextView.setText(sb.toString());
+						//userTextView.setText(sb.toString());
 					}
 				}).executeAsync();
 	}
@@ -743,7 +756,7 @@ public class HelloFacebookSampleActivity extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(String addressText) {
 			// update the address to last transaction in the database
-			// db.updateTransactionLocation(transactionID, addressText);
+			userTextView.setText(addressText);
 		}
 	}
 

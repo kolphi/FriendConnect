@@ -60,13 +60,13 @@
                     android:id="@+id/postStatusUpdateButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Post Status Update"
+                    android:text="Query my interests"
                     />
             <Button
                     android:id="@+id/postPhotoButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Post Photo"
+                    android:text="Show me activities"
                     />
             <Button
                     android:id="@+id/pickFriendsButton"
